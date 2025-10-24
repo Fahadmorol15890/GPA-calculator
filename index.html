@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diploma CGPA Calculator</title>
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+.container {
+  background: #fff;
+  padding: 30px 35px;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 500px;
+}
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-size: 26px;
+}
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #555;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  background: #ff416c;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+button:hover {
+  background: #ff4b2b;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+.semester-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.semester-row input {
+  flex: 1;
+}
+.result {
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  font-weight: bold;
+  background: #e0f0ff;
+  color: #2575fc;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Diploma Semester CGPA Calculator</h1>
+
+  <label>Roll Number</label>
+  <input type="text" id="roll" placeholder="Enter your roll number">
+
+  <label>Registration Number</label>
+  <input type="text" id="reg" placeholder="Enter your registration number">
+
+  <label>Passing Year</label>
+  <input type="number" id="year" placeholder="Enter passing year">
+
+  <label>Number of Semesters</label>
+  <input type="number" id="numSem" placeholder="Enter total semesters" min="1">
+
+  <button onclick="generateSemesters()">Add Semesters</button>
+
+  <div id="semestersContainer"></div>
+
+  <button onclick="calculateCGPA()">Calculate Final CGPA</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+function generateSemesters() {
+  const container = document.getElementById('semestersContainer');
+  container.innerHTML = '';
+  const num = parseInt(document.getElementById('numSem').value);
+  if(isNaN(num) || num<1){
+    alert("Enter valid number of semesters");
+    return;
+  }
+  for(let i=1; i<=num; i++){
+    const div = document.createElement('div');
+    div.className = 'semester-row';
+    div.innerHTML = `<label>Semester ${i} CGPA</label><input type="number" class="semester" placeholder="0-4" step="0.01" min="0" max="4">`;
+    container.appendChild(div);
+  }
+}
+
+function calculateCGPA() {
+  const sems = Array.from(document.querySelectorAll('.semester')).map(input=>parseFloat(input.value));
+  if(sems.some(isNaN)){
+    alert("Please enter all semester CGPAs");
+    return;
+  }
+  const finalCGPA = (sems.reduce((a,b)=>a+b,0)/sems.length).toFixed(2);
+
+  const roll = document.getElementById('roll').value;
+  const reg = document.getElementById('reg').value;
+  const year = document.getElementById('year').value;
+
+  document.getElementById('result').innerHTML = `
+    <p>Roll Number: <strong>${roll}</strong></p>
+    <p>Registration Number: <strong>${reg}</strong></p>
+    <p>Passing Year: <strong>${year}</strong></p>
+    <p>Final CGPA: <strong>${finalCGPA}</strong></p>
+  `;
+}
+</script>
+</body>
+</html>
